@@ -1,0 +1,119 @@
+<html>
+  <head>
+    <title>Javascript Calculator</title>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Fascinate" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.4/css/bootstrap.css">
+    <link rel="stylesheet" src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css"></script>
+    <link rel="stylesheet" href="style.css">
+
+
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/big.js/5.0.3/big.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+
+  </head>
+
+  <body>
+    <div class="container-fluid main">
+    <div class="top">
+      <div class="brand"><p>Caseyo DG-166 <span class="solarlast"></span><span class="solar"></span><span class="solar"></span><span class="solar"></span></p></div>
+    <div class="border">
+      <div class="display">
+        <h2 id="total">0</h2>
+        <p id="currentNum"></p>
+      </div>
+      </div>
+      </div>
+     <div class="buttons">
+     <div class="row">
+
+             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3">
+               <button class="btn btn-default clear" data-val="AC" id="AC" type="submit">AC</button>
+             </div>
+             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3">
+               <button class="btn btn-default clear" data-val="CE" type="submit">(.) (.)</button>
+             </div>
+             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3">
+               <button class="btn btn-default operator" data-val="÷" id="divide" type="submit">÷</button>
+             </div>
+             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3">
+               <button class="btn btn-default operator" data-val="x" id="times" type="submit">x</button>
+             </div>
+
+       </div>
+     <div class="row">
+
+             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3">
+               <button class="btn btn-default numbers" id="seven" data-val="7" type="submit">7</button>
+             </div>
+             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3">
+               <button class="btn btn-default numbers" id="eight" data-val="8" type="submit">8</button>
+             </div>
+             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3">
+               <button class="btn btn-default numbers" id="nine" data-val="9" type="submit">9</button>
+             </div>
+             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3">
+               <button class="btn btn-default operator" id="minus"  data-val="-" type="submit">-</button>
+             </div>
+
+       </div>
+     <div class="row">
+
+             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3">
+               <button class="btn btn-default numbers" id="four" data-val="4" type="submit">4</button>
+             </div>
+             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3">
+               <button class="btn btn-default numbers" id="five" data-val="5" type="submit">5</button>
+             </div>
+             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3">
+               <button class="btn btn-default numbers" id="six" data-val="6" type="submit">6</button>
+             </div>
+             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3">
+               <button class="btn btn-default operator" id="add" data-val="+" id="add" type="submit">+</button>
+             </div>
+
+       </div>
+     <div class="row">
+        <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-xs-9">
+          <div class="row">
+
+            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4">
+               <button class="btn btn-default numbers" id="one" data-val="1" type="submit">1</button>
+            </div>
+
+            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4">
+               <button class="btn btn-default numbers" id="two" data-val="2" type="submit">2</button>
+            </div>
+
+            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4">
+               <button class="btn btn-default numbers" id="three" data-val="3" type="submit">3</button>
+            </div>
+
+          </div>
+          <div class="row">
+
+            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-xs-8">
+               <button class="btn btn-default numbers" id="zero" data-val="0" type="submit">0</button>
+            </div>
+
+             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4">
+               <button class="btn btn-default operator" id="dot" data-val="." type="submit">.</button>
+            </div>
+
+          </div>
+
+
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 equalCol">
+          <button class="btn btn-default equalsBtn operator" data-val="=" id="equals" type="submit">=</button>
+        </div>
+      </div>
+      </div>
+    </div>
+  </body>
+</html>
