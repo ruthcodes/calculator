@@ -1,4 +1,6 @@
 $(document).ready(function(){
+  // focus window so keyboard entries trigger immediately without a click
+  $(window).focus();
   // buttons added to this dynamically,
   // except for these as the value is different to what is listed on the button (e.g. ÷ vs. /)
   const calculatorButtons = ["Enter", "*", "/"];
@@ -14,8 +16,7 @@ $(document).ready(function(){
   })
   //get value of button clicked
   function getValue(e){
-    //probably change this to data-value, and update that on HTML to be what you need (so button shows ÷ but the data-val is /)
-    console.log(e.target.innerHTML);
+    console.log(e.target.dataset.val);
   }
   // add listener to handle key inputs instead of clicks
   window.addEventListener('keydown', function(e) {
@@ -27,6 +28,9 @@ $(document).ready(function(){
       console.log(e.key);
     }
   });
+  //array to store users inputs
+  const runningTotal = [];
+
 
 
 })
