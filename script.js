@@ -7,6 +7,7 @@ $(document).ready(function(){
   //array to store users inputs
   let sumList = [];
   let currentNumber;
+  let justPressedEnter = false;
 
   function updateDisplay(text){
     totalHTML.innerHTML = text;
@@ -67,12 +68,13 @@ $(document).ready(function(){
   function handleInput(e){
     /*    handle numbers    */
     if(!Number.isNaN(parseInt(e))){
-      //entering a number after pressing equals
-      if (runningTotalHTML.innerHTML === ''){
+      //entering a number after pressing equals - this is broken for decimals
+      if (justPressedEnter){
         currentNumber = e;
       } else {
-        currentNumber = currentNumber ? currentNumber.concat(e) : e
+        currentNumber = currentNumber ? currentNumber+e : e
       }
+
       updateDisplay(currentNumber)
       return
     }
@@ -97,6 +99,9 @@ $(document).ready(function(){
       if(currentNumber){
         sumList.push(currentNumber)
       }
+      if(!currentNumber && sumList.length<1){
+        return
+      }
       sumList.push(e);
       // if last 2 items both operators, only keep the most recent
       if (["+", "-", "*", "/", "=", "Enter"].includes(sumList[sumList.length-2])){
@@ -117,6 +122,17 @@ $(document).ready(function(){
       currentNumber = getTotal();
       sumList = [];
       runningTotalHTML.innerHTML = '';
+    }
+    if (e === "flip"){
+      currentNumber = 5318008;
+      sumList = [];
+      updateDisplay(currentNumber)
+      runningTotalHTML.innerHTML = sumList.join('');
+      const flip = document.querySelector("#flip")
+      flip.classList.add("flip")
+      setTimeout(() => {
+        flip.classList.remove("flip")
+      }, 2500)
     }
   }
 })
