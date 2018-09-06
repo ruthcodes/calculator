@@ -1,18 +1,18 @@
 $(document).ready(function(){
   $(window).focus();
-  // buttons added to this dynamically,
-  const calculatorButtons = [];
+  // grab all buttons, and text fields that need updating
+  const runningTotalHTML = document.querySelector('#runningTotal');
+  const totalHTML = document.querySelector('#total');
+  const calculatorButtons = ['Enter'];
   //array to store users inputs
   let sumList = [];
   let currentNumber;
 
-  // grab all buttons, and text fields that need updating
-  const buttons = document.querySelectorAll('button');
-  let runningTotalHTML = document.querySelector('#runningTotal');
-  let totalHTML = document.querySelector('#total');
-
-  buttons.forEach(button => {
-    calculatorButtons.push(button.innerHTML);
+  function updateDisplay(text){
+    totalHTML.innerHTML = text;
+  }
+  document.querySelectorAll('button').forEach(button => {
+    calculatorButtons.push(button.dataset.val);
     button.addEventListener("click", getValue)
   })
   // add listener to handle key inputs instead of clicks
@@ -65,46 +65,58 @@ $(document).ready(function(){
   }
 
   function handleInput(e){
-
     /*    handle numbers    */
-
     if(!Number.isNaN(parseInt(e))){
-      // concat to current or create a new current, and display that
-      currentNumber = currentNumber ? currentNumber.concat(e) : e
-      totalHTML.innerHTML = currentNumber
+      //entering a number after pressing equals
+      if (runningTotalHTML.innerHTML === ''){
+        currentNumber = e;
+      } else {
+        currentNumber = currentNumber ? currentNumber.concat(e) : e
+      }
+      updateDisplay(currentNumber)
+      return
     }
-
     /*    handle decimals    */
-
     if (e === "."){
       if (!currentNumber){
-        console.log("there wasnt a number")
         currentNumber = "0."
-        totalHTML.innerHTML = currentNumber
+        updateDisplay(currentNumber)
+        return
+      }
+      //check that the number is not already a float
+      if (currentNumber.match(/\./gi)){
+        return
       } else {
-        //check that the number is not already a float
-        if (currentNumber.match(/\./gi)){
-          return
-        } else {
-          currentNumber = currentNumber.concat(e);
-          totalHTML.innerHTML = currentNumber
-        }
+        currentNumber = currentNumber.concat(e);
+        updateDisplay(currentNumber)
+        return
       }
     }
-
     /*    handle symbols    */
-
-    let symbols = ["+", "-", "*", "/", "="]
-    // if entered a symbol
-    if (symbols.includes(e)){
-      sumList.push(currentNumber)
-      sumList.push(e);
-      currentNumber = undefined;
-      if (sumList.length >= 3){
-        totalHTML.innerHTML = getTotal();
-        runningTotalHTML.innerHTML = sumList.join('');
+    if (["+", "-", "*", "/"].includes(e)){
+      if(currentNumber){
+        sumList.push(currentNumber)
       }
+      sumList.push(e);
+      // if last 2 items both operators, only keep the most recent
+      if (["+", "-", "*", "/", "=", "Enter"].includes(sumList[sumList.length-2])){
+        sumList.splice(sumList.length-2, 1)
+      }
+      currentNumber = undefined;
+      runningTotalHTML.innerHTML = sumList.join('');
 
+      updateDisplay(getTotal())
+
+    }
+    /*    handle enter    */
+    if (["=", "Enter"].includes(e)){
+      if(currentNumber){
+        sumList.push(currentNumber)
+      }
+      updateDisplay(getTotal())
+      currentNumber = getTotal();
+      sumList = [];
+      runningTotalHTML.innerHTML = '';
     }
   }
 })
