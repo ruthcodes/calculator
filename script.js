@@ -7,14 +7,14 @@ $(document).ready(function(){
   //array to store users inputs
   let sumList = [];
   let currentNumber;
-  let justPressedEnter = false;
+  let pressedEnter = false;
 
   function updateDisplay(text){
     totalHTML.innerHTML = text;
   }
   document.querySelectorAll('button').forEach(button => {
     calculatorButtons.push(button.dataset.val);
-    button.addEventListener("click", getValue)
+    button.addEventListener("click", (e) => handleInput(e.target.dataset.val))
   })
   // add listener to handle key inputs instead of clicks
   window.addEventListener('keydown', function(e) {
@@ -26,10 +26,6 @@ $(document).ready(function(){
       handleInput(e.key)
     }
   });
-
-  function getValue(e){
-    handleInput(e.target.dataset.val)
-  }
 
   function evaluate(sum){
     let first = Big(parseFloat(sum[0]));
@@ -43,6 +39,9 @@ $(document).ready(function(){
             return +first.minus(second).toString()
           break;
       case "/":
+        if(sum[2] === "0"){
+          return "Error, divide by 0"
+        }
         return +first.div(second).toString()
         break;
       case "*":
@@ -52,7 +51,8 @@ $(document).ready(function(){
   }
 
   function getTotal(){
-    if (sumList.length < 3){
+    if (sumList.length < 3 ||
+       (sumList.length === 3 && sumList[sumList.length-1] === "=")){
       return sumList[0];
     }
     // evaluate first sum in list
@@ -68,34 +68,35 @@ $(document).ready(function(){
   function handleInput(e){
     /*    handle numbers    */
     if(!Number.isNaN(parseInt(e))){
-      //entering a number after pressing equals - this is broken for decimals
-      if (justPressedEnter){
+
+      if (pressedEnter){
         currentNumber = e;
+        pressedEnter = false;
       } else {
         currentNumber = currentNumber ? currentNumber+e : e
       }
-
       updateDisplay(currentNumber)
       return
     }
     /*    handle decimals    */
     if (e === "."){
-      if (!currentNumber){
+      if (!currentNumber || pressedEnter){
+        pressedEnter = false;
         currentNumber = "0."
         updateDisplay(currentNumber)
         return
       }
       //check that the number is not already a float
-      if (currentNumber.match(/\./gi)){
+      if (currentNumber.toString().match(/\./gi)){
         return
       } else {
-        currentNumber = currentNumber.concat(e);
+        currentNumber = currentNumber + e;
         updateDisplay(currentNumber)
         return
       }
     }
     /*    handle symbols    */
-    if (["+", "-", "*", "/"].includes(e)){
+    if (["+", "-", "*", "/", "=", "Enter"].includes(e)){
       if(currentNumber){
         sumList.push(currentNumber)
       }
@@ -103,26 +104,25 @@ $(document).ready(function(){
         return
       }
       sumList.push(e);
-      // if last 2 items both operators, only keep the most recent
-      if (["+", "-", "*", "/", "=", "Enter"].includes(sumList[sumList.length-2])){
-        sumList.splice(sumList.length-2, 1)
+      
+      if (["=", "Enter"].includes(e)){
+        pressedEnter = true;
+        updateDisplay(getTotal())
+        currentNumber = getTotal();
+        sumList = [];
+        runningTotalHTML.innerHTML = '';
+      } else {
+        pressedEnter = false;
+        // if last 2 items both operators, only keep the most recent
+        if (["+", "-", "*", "/", "=", "Enter"].includes(sumList[sumList.length-2])){
+          sumList.splice(sumList.length-2, 1)
+        }
+        currentNumber = undefined;
+        runningTotalHTML.innerHTML = sumList.join('');
+        updateDisplay(getTotal())
       }
-      currentNumber = undefined;
-      runningTotalHTML.innerHTML = sumList.join('');
-
-      updateDisplay(getTotal())
-
     }
-    /*    handle enter    */
-    if (["=", "Enter"].includes(e)){
-      if(currentNumber){
-        sumList.push(currentNumber)
-      }
-      updateDisplay(getTotal())
-      currentNumber = getTotal();
-      sumList = [];
-      runningTotalHTML.innerHTML = '';
-    }
+    /*   handle (.)(.)   */
     if (e === "flip"){
       currentNumber = 5318008;
       sumList = [];
@@ -133,6 +133,13 @@ $(document).ready(function(){
       setTimeout(() => {
         flip.classList.remove("flip")
       }, 2500)
+    }
+    /*    handle clear    */
+    if (e === "AC"){
+      currentNumber = 0;
+      sumList = [];
+      updateDisplay(currentNumber)
+      runningTotalHTML.innerHTML = sumList.join('');
     }
   }
 })
