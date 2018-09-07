@@ -11,6 +11,8 @@ $(document).ready(function(){
 
   function updateDisplay(text){
     totalHTML.innerHTML = text;
+    // only show final 20 items in sumList to prevent overflow
+    runningTotalHTML.innerHTML = sumList.join('').slice(-20);
   }
   document.querySelectorAll('button').forEach(button => {
     calculatorButtons.push(button.dataset.val);
@@ -66,6 +68,9 @@ $(document).ready(function(){
   }
 
   function checkNumbers(e){
+    if (checkLength()){
+      return
+    }
     if (pressedEnter){
       currentNumber = e;
       pressedEnter = false;
@@ -77,6 +82,9 @@ $(document).ready(function(){
   }
 
   function checkDecimals(e){
+    if (checkLength()){
+      return
+    }
     if (!currentNumber || pressedEnter){
       pressedEnter = false;
       currentNumber = "0."
@@ -101,6 +109,12 @@ $(document).ready(function(){
       return
     }
     sumList.push(e);
+    if(getTotal().toString().length > 9){
+      updateDisplay("Num too long!")
+      currentNumber = undefined;
+      sumList = [];
+      return
+    }
     if (["=", "Enter"].includes(e)){
       pressedEnter = true;
       updateDisplay(getTotal())
@@ -114,16 +128,15 @@ $(document).ready(function(){
         sumList.splice(sumList.length-2, 1)
       }
       currentNumber = undefined;
-      runningTotalHTML.innerHTML = sumList.join('');
       updateDisplay(getTotal())
     }
+    return
   }
 
   function checkSpin(e){
     currentNumber = 5318008;
     sumList = [];
     updateDisplay(currentNumber)
-    runningTotalHTML.innerHTML = sumList.join('');
     const flip = document.querySelector("#flip")
     flip.classList.add("flip")
     setTimeout(() => {
@@ -135,7 +148,16 @@ $(document).ready(function(){
     currentNumber = 0;
     sumList = [];
     updateDisplay(currentNumber)
-    runningTotalHTML.innerHTML = sumList.join('');
+  }
+
+  function checkLength(){
+    if(currentNumber && currentNumber.length > 7){
+      updateDisplay("Num too long!")
+      currentNumber = undefined;
+      sumList = [];
+      return true;
+    }
+    return false;
   }
 
   function handleInput(e){

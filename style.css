@@ -10,7 +10,6 @@ body{
   background: linear-gradient(to left, black, #404040 25%, #404040 75%, black 100%);
 }
 
-
 .notFlipped{
   transition: ease-out 2s;
 }
@@ -160,7 +159,7 @@ p{
   border: 1px solid #524B52;
 }
 
-#total, currentNum{
+#total{
   overflow: hidden;
 }
 
