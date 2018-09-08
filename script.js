@@ -4,6 +4,7 @@ $(document).ready(function(){
   const runningTotalHTML = document.querySelector('#runningTotal');
   const totalHTML = document.querySelector('#total');
   const calculatorButtons = ['Enter'];
+  const DIV_BY_ZERO_ERR = "Error, can't ÷ by 0";
   //array to store users inputs
   let sumList = [];
   let currentNumber;
@@ -42,7 +43,7 @@ $(document).ready(function(){
           break;
       case "/":
         if(sum[2] === "0"){
-          return "Error, divide by 0"
+          return DIV_BY_ZERO_ERR
         }
         return +first.div(second).toString()
         break;
@@ -54,11 +55,18 @@ $(document).ready(function(){
 
   function getTotal(){
     if (sumList.length < 3 ||
-       (sumList.length === 3 && sumList[sumList.length-1] === "=")){
+       (sumList.length === 3 && ["+", "-", "*", "/", "=", "Enter"].includes(sumList[sumList.length-1]))){
       return sumList[0];
     }
     // evaluate first sum in list
-    let runningTotal = evaluate(sumList.slice(0,3));
+    let nextEval = evaluate(sumList.slice(0,3));
+    if(nextEval === DIV_BY_ZERO_ERR){
+      currentNumber = undefined;
+      sumList = [];
+      return "DIV_BY_ZERO_ERR"
+    } else {
+      runningTotal = nextEval;
+    }
     // loop through remainder of list, evaluating against and updating the runningTotal
     for (let i = 3; i < sumList.length - 2; i += 2){
       let nextTotal = [runningTotal,sumList[i],sumList[i+1]];
@@ -109,6 +117,11 @@ $(document).ready(function(){
       return
     }
     sumList.push(e);
+
+    if (getTotal() === "DIV_BY_ZERO_ERR"){
+      return updateDisplay(DIV_BY_ZERO_ERR)
+    }
+
     if(getTotal().toString().length > 9){
       updateDisplay("Num too long!")
       currentNumber = undefined;
