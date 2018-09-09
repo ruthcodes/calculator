@@ -72,6 +72,12 @@ $(document).ready(function(){
       let nextTotal = [runningTotal,sumList[i],sumList[i+1]];
       runningTotal = evaluate(nextTotal)
     }
+    // handle long floats
+    if (runningTotal % 1 !== 0){
+      if (runningTotal.toString().length > 8){
+        return +runningTotal.toString().slice(0, 9)
+      }
+    }
     return runningTotal;
   }
 
