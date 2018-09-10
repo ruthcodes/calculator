@@ -51,11 +51,6 @@ $(document).ready(function(){
     }
   }
 
-  function emptyVariables(){
-    currentNumber = undefined;
-    sumList = [];
-  }
-
   function getTotal(){
     if (sumList.length < 3 ||
        (sumList.length === 3 && OPERATORS.includes(sumList[sumList.length-1]))){
@@ -65,7 +60,7 @@ $(document).ready(function(){
     do {
       let nextEval = i === 1 ? evaluate(sumList.slice(0,3)) : evaluate([runningTotal,sumList[i],sumList[i+1]])
       if (nextEval === DIV_BY_ZERO_ERR){
-        emptyVariables();
+        clear();
         return DIV_BY_ZERO_ERR
       } else {
         runningTotal = nextEval;
@@ -99,8 +94,7 @@ $(document).ready(function(){
     if (!currentNumber || pressedEnter){
       pressedEnter = false;
       currentNumber = "0."
-      updateDisplay(currentNumber)
-      return
+      return updateDisplay(currentNumber)
     }
     //check that the number is not already a float
     if (!currentNumber.toString().match(/\./gi)){
@@ -122,7 +116,7 @@ $(document).ready(function(){
     }
     if(getTotal().toString().length > 8){
       updateDisplay("Num too long!")
-      return emptyVariables();
+      return clear(e);
     }
     if (["=", "Enter"].includes(e)){
       pressedEnter = true;
@@ -140,7 +134,7 @@ $(document).ready(function(){
     }
   }
 
-  function checkSpin(e){
+  function spin(e){
     currentNumber = 5318008;
     sumList = [];
     updateDisplay(currentNumber)
@@ -151,16 +145,18 @@ $(document).ready(function(){
     }, 2500)
   }
 
-  function checkClear(e){
-    currentNumber = 0;
+  function clear(e){
+    currentNumber = e ? 0 : undefined;
     sumList = [];
-    updateDisplay(currentNumber)
+    if (currentNumber === 0){
+      updateDisplay(currentNumber)
+    }
   }
 
   function checkLength(){
     if(currentNumber && currentNumber.length > 7){
       updateDisplay("Num too long!")
-      emptyVariables();
+      clear();
       return true;
     }
     return false;
@@ -174,9 +170,9 @@ $(document).ready(function(){
     } else if (OPERATORS.includes(e)){
       checkOperators(e);
     } else if (e === "flip"){
-      checkSpin(e);
+      spin(e);
     } else if (e === "AC"){
-      checkClear(e)
+      clear(e)
     } else {
       return
     }
