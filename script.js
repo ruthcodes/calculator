@@ -132,7 +132,7 @@ $(document).ready(function(){
     } else {
       pressedEnter = false;
       // if last 2 items both operators, only keep the most recent
-      if (["+", "-", "*", "/", "=", "Enter"].includes(sumList[sumList.length-2])){
+      if (OPERATORS.includes(sumList[sumList.length-2])){
         sumList.splice(sumList.length-2, 1)
       }
       currentNumber = undefined;
