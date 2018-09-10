@@ -5,6 +5,7 @@ $(document).ready(function(){
   const totalHTML = document.querySelector('#total');
   const calculatorButtons = ['Enter'];
   const DIV_BY_ZERO_ERR = "Error, can't ÷ by 0";
+  const OPERATORS = ["+", "-", "*", "/", "=", "Enter"];
   //array to store users inputs
   let sumList = [];
   let currentNumber;
@@ -15,6 +16,7 @@ $(document).ready(function(){
     // only show final 20 items in sumList to prevent overflow
     runningTotalHTML.innerHTML = sumList.join('').slice(-20);
   }
+
   document.querySelectorAll('button').forEach(button => {
     calculatorButtons.push(button.dataset.val);
     button.addEventListener("click", (e) => handleInput(e.target.dataset.val))
@@ -56,10 +58,9 @@ $(document).ready(function(){
 
   function getTotal(){
     if (sumList.length < 3 ||
-       (sumList.length === 3 && ["+", "-", "*", "/", "=", "Enter"].includes(sumList[sumList.length-1]))){
+       (sumList.length === 3 && OPERATORS.includes(sumList[sumList.length-1]))){
       return sumList[0];
     }
-
     let i = 1;
     do {
       let nextEval = i === 1 ? evaluate(sumList.slice(0,3)) : evaluate([runningTotal,sumList[i],sumList[i+1]])
@@ -72,12 +73,10 @@ $(document).ready(function(){
       i += 2;
     }
     while (i < sumList.length - 2)
-
-    // handle long floats
-    if (runningTotal % 1 !== 0 && runningTotal.toString().length > 7){
-        return +runningTotal.toString().slice(0, 8)
-    }
-    return runningTotal;
+    // truncate long floats
+    return (runningTotal % 1 !== 0 && runningTotal.toString().length > 7) ?
+           +runningTotal.toString().slice(0, 8) :
+           runningTotal;
   }
 
   function checkNumbers(e){
@@ -91,7 +90,6 @@ $(document).ready(function(){
       currentNumber = currentNumber ? currentNumber+e : e
     }
     updateDisplay(currentNumber)
-    return
   }
 
   function checkDecimals(e){
@@ -105,12 +103,9 @@ $(document).ready(function(){
       return
     }
     //check that the number is not already a float
-    if (currentNumber.toString().match(/\./gi)){
-      return
-    } else {
+    if (!currentNumber.toString().match(/\./gi)){
       currentNumber += e;
       updateDisplay(currentNumber)
-      return
     }
   }
 
@@ -127,15 +122,13 @@ $(document).ready(function(){
     }
     if(getTotal().toString().length > 8){
       updateDisplay("Num too long!")
-      emptyVariables();
-      return
+      return emptyVariables();
     }
     if (["=", "Enter"].includes(e)){
       pressedEnter = true;
-      updateDisplay(getTotal())
       currentNumber = getTotal();
       sumList = [];
-      runningTotalHTML.innerHTML = '';
+      updateDisplay(currentNumber)
     } else {
       pressedEnter = false;
       // if last 2 items both operators, only keep the most recent
@@ -145,7 +138,6 @@ $(document).ready(function(){
       currentNumber = undefined;
       updateDisplay(getTotal())
     }
-    return
   }
 
   function checkSpin(e){
@@ -179,7 +171,7 @@ $(document).ready(function(){
       checkNumbers(e);
     } else if (e === "."){
       checkDecimals(e);
-    } else if (["+", "-", "*", "/", "=", "Enter"].includes(e)){
+    } else if (OPERATORS.includes(e)){
       checkOperators(e);
     } else if (e === "flip"){
       checkSpin(e);
