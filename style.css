@@ -10,6 +10,20 @@ body{
   background: linear-gradient(to left, black, #404040 25%, #404040 75%, black 100%);
 }
 
+.notFlipped{
+  transition: ease-out 2s;
+}
+
+.flip{
+  -moz-transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  transform: rotate(180deg);
+  transition: ease-in-out 2s;
+  color: #7FFF00;
+}
+
 .container-fluid{
   border: 1px solid #A9AAA5;
   width: 375px;
@@ -145,7 +159,7 @@ p{
   border: 1px solid #524B52;
 }
 
-#total, currentNum{
+#total{
   overflow: hidden;
 }
 
